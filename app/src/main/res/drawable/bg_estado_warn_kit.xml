@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Fondo del chip de estado "Riego pronto" del kit: ámbar suave, para avisar
+     de que la humedad está bajando (mismo estilo redondeado que los demás). -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="#FFF3E0" />
+    <corners android:radius="20dp" />
+</shape>

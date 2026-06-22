@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_surface"
+    tools:context=".ui.notifications.NotificationsFragment">
+
+    <!-- ════════════════════════════════════════════════════════════════ -->
+    <!-- ══ LISTA DE NOTIFICACIONES ═════════════════════════════════════ -->
+    <!-- ════════════════════════════════════════════════════════════════ -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvNotificaciones"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp"
+        tools:listitem="@layout/item_notificacion" />
+
+    <!-- ════════════════════════════════════════════════════════════════ -->
+    <!-- ══ ESTADO VACÍO (sin notificaciones) ═══════════════════════════ -->
+    <!-- ════════════════════════════════════════════════════════════════ -->
+    <LinearLayout
+        android:id="@+id/layoutVacio"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="32dp"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:background="@drawable/bg_emoji_circle_kit"
+            android:padding="26dp"
+            android:src="@drawable/ic_ug_bell"
+            app:tint="@color/color_primary"
+            android:contentDescription="Sin notificaciones" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="Todo en orden"
+            android:textColor="@color/color_on_surface"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:gravity="center"
+            android:text="No tienes notificaciones pendientes.\nTus plantas están bien cuidadas."
+            android:textColor="@color/color_on_surface_variant"
+            android:textSize="14sp" />
+
+    </LinearLayout>
+
+</FrameLayout>

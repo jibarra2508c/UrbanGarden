@@ -1,0 +1,17 @@
+*.iml
+.gradle/
+/local.properties
+local.properties
+
+# Build (en raíz y en cualquier módulo, p.ej. app/build)
+build/
+/captures
+.externalNativeBuild
+.cxx
+
+# IDE
+.idea/
+.claude/
+
+# OS
+.DS_Store

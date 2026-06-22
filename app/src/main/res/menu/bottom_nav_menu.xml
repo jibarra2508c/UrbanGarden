@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_home"
+        android:icon="@drawable/ic_home_black_24dp"
+        android:title="Inicio" />
+
+    <item
+        android:id="@+id/navigation_kits"
+        android:icon="@drawable/ic_kits_24dp"
+        android:title="Kits" />
+
+    <item
+        android:id="@+id/navigation_qr"
+        android:icon="@drawable/ic_qr_24dp"
+        android:title="Vincular" />
+
+    <item
+        android:id="@+id/navigation_perfil"
+        android:icon="@drawable/outline_profile_24dp"
+        android:title="Perfil" />
+
+</menu>

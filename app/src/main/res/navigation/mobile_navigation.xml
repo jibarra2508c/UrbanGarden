@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_home">
+
+    <!-- ════════════════════════════════════════════════════════════════ -->
+    <!-- ══ HOME ════════════════════════════════════════════════════════ -->
+    <!-- ════════════════════════════════════════════════════════════════ -->
+    <fragment
+        android:id="@+id/navigation_home"
+        android:name="com.app.urbangarden.ui.home.HomeFragment"
+        android:label="Inicio"
+        tools:layout="@layout/fragment_home">
+
+        <!-- Clic en una tarjeta del carrusel: ir directo al detalle -->
+        <action
+            android:id="@+id/action_home_to_detalle"
+            app:destination="@id/detalleKitFragment"/>
+    </fragment>
+
+    <!-- ════════════════════════════════════════════════════════════════ -->
+    <!-- ══ MIS KITS ════════════════════════════════════════════════════ -->
+    <!-- ════════════════════════════════════════════════════════════════ -->
+    <fragment
+        android:id="@+id/navigation_kits"
+        android:name="com.app.urbangarden.ui.kits.KitsFragment"
+        android:label="Mis kits"
+        tools:layout="@layout/fragment_kits">
+
+        <action
+            android:id="@+id/action_kits_to_detalle"
+            app:destination="@id/detalleKitFragment"/>
+    </fragment>
+
+    <!-- ════════════════════════════════════════════════════════════════ -->
+    <!-- ══ DETALLE DEL KIT ═════════════════════════════════════════════ -->
+    <!-- ════════════════════════════════════════════════════════════════ -->
+    <fragment
+        android:id="@+id/detalleKitFragment"
+        android:name="com.app.urbangarden.ui.detalleKit.DetalleKitFragment"
+        android:label="Detalle del Kit"
+        tools:layout="@layout/fragment_detalle_kit">
+
+        <argument
+            android:name="kitId"
+            app:argType="string"
+            app:nullable="true"/>
+
+        <!-- Acciones a las 5 herramientas -->
+        <action
+            android:id="@+id/action_detalle_to_calculadora"
+            app:destination="@id/calculadoraRiegoFragment"/>
+        <action
+            android:id="@+id/action_detalle_to_medidorLuz"
+            app:destination="@id/medidorLuzFragment"/>
+        <action
+            android:id="@+id/action_detalle_to_asesor"
+            app:destination="@id/asesorFragment"/>
+        <action
+            android:id="@+id/action_detalle_to_poda"
+            app:destination="@id/podaFragment"/>
+        <action
+            android:id="@+id/action_detalle_to_trasplante"
+            app:destination="@id/trasplanteFragment"/>
+    </fragment>
+
+    <!-- ════════════════════════════════════════════════════════════════ -->
+    <!-- ══ QR (vincular kit) ═══════════════════════════════════════════ -->
+    <!-- ════════════════════════════════════════════════════════════════ -->
+    <fragment
+        android:id="@+id/navigation_qr"
+        android:name="com.app.urbangarden.ui.qr.QrFragment"
+        android:label="Vincular kit"
+        tools:layout="@layout/fragment_qr"/>
+
+    <!-- ════════════════════════════════════════════════════════════════ -->
+    <!-- ══ PERFIL ══════════════════════════════════════════════════════ -->
+    <!-- ════════════════════════════════════════════════════════════════ -->
+    <fragment
+        android:id="@+id/navigation_perfil"
+        android:name="com.app.urbangarden.ui.perfil.PerfilFragment"
+        android:label="Perfil"
+        tools:layout="@layout/fragment_perfil"/>
+
+    <!-- ════════════════════════════════════════════════════════════════ -->
+    <!-- ══ NOTIFICACIONES (icono campana del toolbar) ══════════════════ -->
+    <!-- ════════════════════════════════════════════════════════════════ -->
+    <fragment
+        android:id="@+id/action_notificaciones"
+        android:name="com.app.urbangarden.ui.notifications.NotificationsFragment"
+        android:label="Notificaciones"
+        tools:layout="@layout/fragment_notifications">
+
+        <!-- Clic en una tarjeta de aviso: ir al detalle del kit relacionado -->
+        <action
+            android:id="@+id/action_notificaciones_to_detalle"
+            app:destination="@id/detalleKitFragment"/>
+        <!-- Aviso de trasplante: ir directo a la herramienta de trasplante -->
+        <action
+            android:id="@+id/action_notificaciones_to_trasplante"
+            app:destination="@id/trasplanteFragment"/>
+    </fragment>
+
+    <!-- ════════════════════════════════════════════════════════════════ -->
+    <!-- ══ HERRAMIENTAS DE CUIDADO (subpantallas del detalle) ══════════ -->
+    <!-- ════════════════════════════════════════════════════════════════ -->
+
+    <fragment
+        android:id="@+id/calculadoraRiegoFragment"
+        android:name="com.app.urbangarden.ui.calculadoraRiego.CalculadoraRiegoFragment"
+        android:label=""
+        tools:layout="@layout/fragment_calculadora_riego">
+
+        <argument
+            android:name="kitId"
+            app:argType="string"
+            app:nullable="true"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/medidorLuzFragment"
+        android:name="com.app.urbangarden.ui.medidorLuz.MedidorLuzFragment"
+        android:label=""
+        tools:layout="@layout/fragment_medidor_luz">
+
+        <argument
+            android:name="kitId"
+            app:argType="string"
+            app:nullable="true"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/asesorFragment"
+        android:name="com.app.urbangarden.ui.asesor.AsesorFragment"
+        android:label=""
+        tools:layout="@layout/fragment_asesor"/>
+
+    <fragment
+        android:id="@+id/podaFragment"
+        android:name="com.app.urbangarden.ui.poda.PodaFragment"
+        android:label=""
+        tools:layout="@layout/fragment_poda"/>
+
+    <fragment
+        android:id="@+id/trasplanteFragment"
+        android:name="com.app.urbangarden.ui.trasplante.TrasplanteFragment"
+        android:label=""
+        tools:layout="@layout/fragment_trasplante">
+
+        <argument
+            android:name="kitId"
+            app:argType="string"
+            app:nullable="true"/>
+    </fragment>
+
+</navigation>

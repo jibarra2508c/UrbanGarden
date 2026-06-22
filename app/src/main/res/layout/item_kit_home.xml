@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="140dp"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="10dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="2dp"
+    app:cardBackgroundColor="@color/white"
+    app:strokeColor="@color/color_outline"
+    app:strokeWidth="1dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="14dp">
+
+        <!-- Emoji -->
+        <TextView
+            android:id="@+id/tvKitEmoji"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:background="@drawable/bg_emoji_circle_kit"
+            android:gravity="center"
+            android:textSize="26sp"
+            android:layout_marginBottom="10dp"
+            tools:text="🌿"/>
+
+        <!-- Nombre -->
+        <TextView
+            android:id="@+id/tvKitNombre"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/color_on_surface"
+            tools:text="Albahaca"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:maxLines="1"
+            android:ellipsize="end"/>
+
+        <!-- Chip estado -->
+        <TextView
+            android:id="@+id/tvKitEstado"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:paddingTop="3dp"
+            android:paddingBottom="3dp"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:background="@drawable/bg_estado_ok_kit"
+            tools:text="✓ Óptimo"/>
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

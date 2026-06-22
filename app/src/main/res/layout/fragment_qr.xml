@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_surface">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp"
+        android:paddingBottom="80dp">
+
+        <!-- Título -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Vincular Kit"
+            android:textColor="@color/color_on_surface"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="6dp"/>
+
+        <!-- Subtítulo -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Escanea el código QR de tu kit o introduce el ID manualmente."
+            android:textColor="@color/color_on_surface_variant"
+            android:textSize="14sp"
+            android:layout_marginBottom="24dp"/>
+
+        <!-- Visor QR simulado -->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="260dp"
+            android:background="@drawable/bg_qr_viewfinder"
+            android:layout_marginBottom="20dp">
+
+            <!-- Esquinas del visor -->
+            <View
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="top|start"
+                android:background="@drawable/bg_qr_corner_tl"/>
+
+            <View
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="top|end"
+                android:background="@drawable/bg_qr_corner_tr"/>
+
+            <View
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="bottom|start"
+                android:background="@drawable/bg_qr_corner_bl"/>
+
+            <View
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="bottom|end"
+                android:background="@drawable/bg_qr_corner_br"/>
+
+            <!-- Texto central -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Apunta al código QR"
+                android:textColor="#66FFFFFF"
+                android:textSize="14sp"/>
+
+        </FrameLayout>
+
+        <!-- Botones de cámara y galería -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="16dp"
+            android:weightSum="2">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnCamara"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginEnd="6dp"
+                android:text="Cámara"
+                app:icon="@drawable/ic_ug_camera"
+                app:iconGravity="textStart"
+                app:strokeColor="@color/color_primary"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnGaleria"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="6dp"
+                android:text="Galería"
+                app:icon="@drawable/ic_ug_image"
+                app:iconGravity="textStart"
+                app:strokeColor="@color/color_primary"/>
+
+        </LinearLayout>
+
+        <!-- Divisor -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="─────  o ingresa el ID  ─────"
+            android:textColor="@color/color_on_surface_variant"
+            android:textSize="12sp"
+            android:gravity="center"
+            android:layout_marginBottom="16dp"/>
+
+        <!-- Campo ID -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilIdKit"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Ej: KIT-2024-0123"
+            android:layout_marginBottom="20dp"
+            app:boxStrokeColor="@color/color_primary">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etIdKit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:maxLines="1"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Botón vincular -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnVincular"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Vincular Kit"
+            android:textSize="16sp"
+            android:padding="14dp"
+            app:backgroundTint="@color/color_primary"
+            android:layout_marginBottom="16dp"/>
+
+        <!-- Info -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_info_qr"
+            android:orientation="vertical"
+            android:padding="14dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ℹ️ ¿Dónde encuentro el ID?"
+                android:textColor="@color/color_on_surface"
+                android:textStyle="bold"
+                android:textSize="13sp"
+                android:layout_marginBottom="4dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="El código ID y QR se encuentran en la etiqueta inferior de tu Kit UrbanGarden o en el manual de inicio rápido incluido en la caja."
+                android:textColor="@color/color_on_surface_variant"
+                android:textSize="12sp"
+                android:lineSpacingExtra="2dp"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>
