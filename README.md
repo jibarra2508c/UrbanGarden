@@ -1,118 +1,119 @@
 # UrbanGarden 🌱
 
-Aplicación **Android nativa (Java)** para la gestión de **kits de huerto urbano**: cada usuario vincula sus kits físicos (por QR o ID), sigue el crecimiento de sus plantas en tiempo real y dispone de un conjunto de herramientas de cuidado (riego, luz, poda, trasplante) y avisos automáticos.
+Aplicación **Android nativa (Java)** para la gestión de **kits de huerto urbano**: cada usuario vincula sus kits físicos (por QR o ID), realiza el seguimiento del crecimiento de sus plantas en tiempo real y dispone de un conjunto de herramientas de cuidado (riego, luz, poda, trasplante) y avisos generados automáticamente.
 
-Proyecto desarrollado como trabajo de fin del ciclo **DAM** (Desarrollo de Aplicaciones Multiplataforma). El código está documentado en español y estructurado por capas (UI / modelo / datos) para que sea fácil de leer, clonar y evaluar.
+Proyecto desarrollado como trabajo de fin del ciclo **DAM** (Desarrollo de Aplicaciones Multiplataforma). El código está documentado en español y estructurado por capas (UI / modelo / datos) para facilitar su lectura y evaluación.
 
-> **Idea de producto:** UrbanGarden vende kits de cultivo (maceta + sustrato + semillas) con un código único. El cliente lo escanea con la app, que "activa" el kit y le acompaña durante todo el ciclo de cultivo hasta la cosecha.
-
----
-
-## 📑 Índice
-
-- [Funcionalidades](#-funcionalidades)
-- [Cómo crece el huerto: lógica de dominio](#-cómo-crece-el-huerto-lógica-de-dominio)
-- [Pantallas en detalle](#-pantallas-en-detalle)
-- [Arquitectura](#-arquitectura)
-- [Tecnologías](#-tecnologías)
-- [Puesta en marcha](#-puesta-en-marcha)
-- [Modelo de datos en Firestore](#-modelo-de-datos-en-firestore)
-- [Estructura del proyecto](#-estructura-del-proyecto)
-- [Relación con las unidades del ciclo (DAM)](#-relación-con-las-unidades-del-ciclo-dam)
-- [Autoría](#-autoría)
+> **Dominio de producto:** UrbanGarden comercializa kits de cultivo (maceta + sustrato + semillas) identificados por un código único. El cliente lo escanea con la app, que registra la activación del kit y le da soporte durante el ciclo de cultivo hasta la cosecha.
 
 ---
 
-## ✨ Funcionalidades
+## Índice
 
-| Área | Qué hace |
+- [Funcionalidades](#funcionalidades)
+- [Lógica de dominio](#lógica-de-dominio)
+- [Pantallas en detalle](#pantallas-en-detalle)
+- [Arquitectura](#arquitectura)
+- [Tecnologías](#tecnologías)
+- [Puesta en marcha](#puesta-en-marcha)
+- [Modelo de datos en Firestore](#modelo-de-datos-en-firestore)
+- [Estructura del proyecto](#estructura-del-proyecto)
+- [Autoría](#autoría)
+
+---
+
+## Funcionalidades
+
+| Área | Descripción |
 |------|----------|
-| **Autenticación** | Registro e inicio de sesión con **Firebase Authentication** (email + contraseña), auto-login si ya hay sesión, validación de formularios y mensajes de error traducidos al español. |
-| **Inicio (Home)** | Saludo personalizado, tarjeta **"Mi huerto"** (mini-esquema visual + resumen por categorías), tarjeta **"El tiempo hoy"** con recomendación de riego, y carrusel **"Mis kits"**. |
-| **Gestión de kits** | Lista completa de kits con riego rápido, alta de kits por **QR** o **ID manual**, ficha de detalle, edición y borrado. Cada usuario solo ve **sus** kits. |
-| **Crecimiento en vivo** | El progreso del cultivo y la humedad se calculan **en función del tiempo transcurrido**: las plantas "crecen" y se "secan" solas sin tocar la base de datos. |
-| **Herramientas de cuidado** | Calculadora de riego, medidor de luz (sensor real del móvil), asesor premium, guía de poda y guía de trasplante. |
-| **Avisos** | Notificaciones in-app generadas automáticamente según el estado de cada planta, con contador (badge) en la barra superior. |
-| **Tiempo real** | Cualquier cambio en Firestore se refleja en todas las pantallas al instante gracias a `LiveData` + listeners. |
+| **Autenticación** | Registro e inicio de sesión con **Firebase Authentication** (email + contraseña), reanudación automática de sesión, validación de formularios y traducción de los errores de Firebase a mensajes en español. |
+| **Inicio (Home)** | Cabecera con el nombre del usuario, tarjeta **"Mi huerto"** (esquema visual + resumen por categorías), tarjeta **"El tiempo hoy"** con recomendación de riego, y carrusel **"Mis kits"**. |
+| **Gestión de kits** | Listado de kits con riego rápido, alta por **QR** o **ID manual**, ficha de detalle, edición y borrado. El acceso a los kits está aislado por usuario. |
+| **Estado calculado** | El progreso del cultivo y la humedad se derivan **del tiempo transcurrido**, sin persistir valores intermedios en la base de datos. |
+| **Herramientas de cuidado** | Calculadora de riego, medidor de luz (sensor del dispositivo), asesor premium, guía de poda y guía de trasplante. |
+| **Avisos** | Notificaciones in-app derivadas del estado de cada kit, con contador (badge) en la barra superior. |
+| **Sincronización** | Los cambios en Firestore se propagan a todas las pantallas mediante `LiveData` y *snapshot listeners*. |
 
 ---
 
-## 🌿 Cómo crece el huerto: lógica de dominio
+## Lógica de dominio
 
-El corazón de la app es la clase [`Kit`](app/src/main/java/com/app/urbangarden/model/Kit.java), que **no guarda solo valores** sino que los calcula al a partir de las fechas:
+La clase [`Kit`](app/src/main/java/com/app/urbangarden/model/Kit.java) no almacena estados intermedios, sino que los **deriva en tiempo de lectura** a partir de las marcas temporales persistidas:
 
-- **Edad real** (`getDiasReales`): días desde la activación + edad base de siembra. Crece sola cada día.
-- **Progreso del ciclo** (`getProgresoReal`): de 0 a 100 % a lo largo de **110 días** (`DIAS_CICLO_COMPLETO`). Es lo que pinta la barra de progreso del detalle.
-- **Humedad real** (`getHumedadReal`): parte del 100 % tras un riego y **decae linealmente hasta 0 % en 24 h** (`ParametrosRiego.INTERVALO_RIEGO_BASE_HORAS`).
-- **¿Necesita riego?** (`necesitaRiego`): cierto cuando la humedad real baja del **50 %**.
-- **Regar** (`regar`): pone la humedad al 100 % y reinicia el reloj del decaimiento.
+- **Edad real** (`getDiasReales`): días transcurridos desde la activación más la edad base de siembra.
+- **Progreso del ciclo** (`getProgresoReal`): valor 0–100 % interpolado sobre un ciclo de **110 días** (`DIAS_CICLO_COMPLETO`). Alimenta la barra de progreso de la ficha de detalle.
+- **Humedad real** (`getHumedadReal`): parte del 100 % tras el último riego y **decae linealmente hasta 0 % en 24 h** (`ParametrosRiego.INTERVALO_RIEGO_BASE_HORAS`).
+- **Necesidad de riego** (`necesitaRiego`): verdadero cuando la humedad real cae por debajo del **50 %**.
+- **Riego** (`regar`): restablece la humedad al 100 % y reinicia la referencia temporal del decaimiento.
+
+Al derivar el estado de las fechas, los valores evolucionan de forma consistente entre sesiones sin necesidad de tareas en segundo plano ni actualizaciones programadas: las plantas progresan y consumen humedad únicamente en función del tiempo.
 
 ---
 
-## 📱 Pantallas en detalle
+## Pantallas en detalle
 
 ### Login / Registro — `LoginActivity`
-Una sola pantalla con dos vistas alternables (login ↔ registro). Valida email y contraseña, delega en `SesionManager` (Firebase Auth) y, si ya existe sesión, salta directamente a la app. El cierre de sesión está centralizado en `LoginActivity.cerrarSesion()`, que además descarta el repositorio del usuario para que el siguiente login cargue sus propios kits.
+Pantalla única con dos vistas conmutables (login / registro). Valida email y contraseña, delega la autenticación en `SesionManager` (Firebase Auth) y, si existe una sesión activa, navega directamente a la app. El cierre de sesión está centralizado en `LoginActivity.cerrarSesion()`, que además descarta el repositorio del usuario actual para que el siguiente inicio de sesión cargue sus propios kits.
 
 ### Inicio — `HomeFragment`
 - **Cabecera** con el nombre del usuario (display name de Firebase).
-- **Mi huerto:** dibuja un emoji por cada kit y un resumen del tipo *"2 aromáticas · 1 hortaliza"*.
-- **El tiempo hoy:** consulta la API **Open-Meteo** (gratuita, sin clave) en un hilo de fondo y aconseja si regar. Ubicación **fija en Mallorca** para la demo (el GPS daba problemas en el emulador). Incluye **caché de 30 min** y **3 reintentos** ante fallos de red.
-- **Mis kits:** carrusel horizontal que se actualiza solo al observar el `LiveData` del repositorio.
+- **Mi huerto:** representa un emoji por kit y un resumen agregado por categoría (p. ej. *"2 aromáticas · 1 hortaliza"*).
+- **El tiempo hoy:** consume la API **Open-Meteo** (sin clave) en un hilo en segundo plano y emite una recomendación de riego. Ubicación **fija (Mallorca)** en esta versión. Incluye **caché de 30 min** y **3 reintentos** ante fallos de red.
+- **Mis kits:** carrusel horizontal actualizado por observación del `LiveData` del repositorio.
 
-### Lista de kits — `KitsFragment`
-Lista completa con un botón **"Regar ahora"** por tarjeta (persiste en Firestore) y un **FAB** para añadir kits nuevos (lleva a la pantalla de vinculación). Sin `notify` manual ni `onResume`: la lista se refresca al observar el `LiveData`.
+### Listado de kits — `KitsFragment`
+Listado completo con acción **"Regar ahora"** por tarjeta (persiste en Firestore) y un **FAB** para dar de alta nuevos kits (navega a la pantalla de vinculación). La lista se actualiza por observación del `LiveData`, sin `notifyDataSetChanged` manual ni recarga en `onResume`.
 
-### Vincular kit (QR) — `QrFragment`
-Dos formas de añadir un kit:
-1. **Escaneo QR** con la cámara (librería **ZXing** `zxing-android-embedded`).
-2. **ID manual** con formato validado (`KIT-2024-0123`).
+### Vinculación de kit (QR) — `QrFragment`
+Dos vías de alta:
+1. **Escaneo QR** con la cámara (librería **ZXing**, `zxing-android-embedded`).
+2. **ID manual** con validación de formato (`KIT-2024-0123`).
 
-El ID se busca en la colección **`catalogo`** de Firestore; si existe, el kit "de fábrica" se descarga a los kits del usuario y se marca su fecha de activación. Evita duplicados y avisa si el kit no existe.
+El ID se consulta en la colección **`catalogo`** de Firestore; si existe, el kit de catálogo se copia a los kits del usuario y se registra su fecha de activación. Se controlan los duplicados y el caso de ID inexistente.
 
 ### Detalle del kit — `DetalleKitFragment`
-Ficha completa de una planta (recibe solo el **ID** y observa el repositorio):
+Ficha de una planta (recibe únicamente el **ID** y observa el repositorio):
 - Cabecera con emoji, nombre y especie.
-- **Barra de progreso** del ciclo (en vivo) + días desde activación y estimación de cosecha.
+- **Barra de progreso** del ciclo (estado calculado), días desde la activación y estimación de cosecha.
 - Agua diaria recomendada.
 - Acceso a las **5 herramientas** de cuidado.
-- **Editar** (nombre y especie, diálogo construido por código) y **Eliminar** (con confirmación).
+- **Edición** (nombre y especie mediante diálogo construido en código) y **borrado** con confirmación.
 
 ### Calculadora de riego — `CalculadoraRiegoFragment`
-Estima el agua diaria (ml) a partir de **ubicación** (interior/exterior), **horas de sol** (slider) y **tamaño del kit** (pequeño / mediano / grande → 0,5 / 1,5 / 3 L de sustrato). El cálculo vive en [`ParametrosRiego.mlAlDia`](app/src/main/java/com/app/urbangarden/model/ParametrosRiego.java), que aplica factores de ajuste por sol y por exterior. El botón **"Registrar riego"** riega el kit y guarda el agua/día calculada en Firestore.
+Estima el agua diaria (ml) a partir de la **ubicación** (interior/exterior), las **horas de sol** (slider) y el **tamaño del kit** (pequeño / mediano / grande → 0,5 / 1,5 / 3 L de sustrato). El cálculo reside en [`ParametrosRiego.mlAlDia`](app/src/main/java/com/app/urbangarden/model/ParametrosRiego.java), que aplica factores de corrección por insolación y por exposición exterior. La acción **"Registrar riego"** riega el kit y persiste el valor de agua/día calculado en Firestore.
 
 ### Medidor de luz — `MedidorLuzFragment`
-Usa el **sensor de luz real del dispositivo** (`Sensor.TYPE_LIGHT`) para leer la iluminancia en **lux** en tiempo real. Muestra el nivel ("luz baja", "media", "sol directo"…), una barra de intensidad y un **veredicto** comparando con el rango óptimo (2 000–10 000 lux, en `ParametrosLuz`) con su consejo. Si el móvil no tiene sensor de luz, lo detecta y desactiva la medición. Detiene el sensor al salir de la pantalla para no gastar batería.
+Emplea el **sensor de luz del dispositivo** (`Sensor.TYPE_LIGHT`) para leer la iluminancia en **lux** en tiempo real. Muestra el nivel cualitativo, una barra de intensidad y un **veredicto** frente al rango óptimo (2 000–10 000 lux, definido en `ParametrosLuz`) con su recomendación asociada. Si el dispositivo carece de sensor de luz, lo detecta y deshabilita la medición. El sensor se libera al abandonar la pantalla para no consumir batería.
 
 ### Guía de poda — `PodaFragment`
-Pantalla informativa estática: cuándo podar y los pasos, común a cualquier especie.
+Pantalla informativa estática (criterios y pasos de poda), independiente de la especie.
 
 ### Guía de trasplante — `TrasplanteFragment`
-Compara la edad real del kit con el umbral de trasplante (**35 días**, `DIAS_TRASPLANTE`) para indicar si ya toca, permite **marcar el kit como trasplantado** (se persiste) y muestra una guía de pasos.
+Compara la edad real del kit con el umbral de trasplante (**35 días**, `DIAS_TRASPLANTE`) para determinar si procede, permite **marcar el kit como trasplantado** (persistente) y presenta la guía de pasos.
 
 ### Asesor premium — `AsesorFragment`
-Pantalla de marketing del modelo **freemium**. No implementa pago real (requeriría Google Play Billing); es el gancho comercial de la suscripción.
+Pantalla del modelo **freemium**. No integra pago real (requeriría Google Play Billing); representa el punto de entrada a la suscripción.
 
 ### Notificaciones — `NotificationsFragment`
-Avisos **in-app** (no push) generados **en vivo** por [`GeneradorNotificaciones`](app/src/main/java/com/app/urbangarden/data/GeneradorNotificaciones.java) a partir del estado de los kits. No se almacenan en BD: se recalculan al observar el `LiveData`. Reglas:
+Avisos **in-app** (no push del sistema) derivados **en tiempo de ejecución** por [`GeneradorNotificaciones`](app/src/main/java/com/app/urbangarden/data/GeneradorNotificaciones.java) a partir del estado de los kits. No se persisten: se recalculan por observación del `LiveData`. Reglas:
 
 | Condición | Aviso |
 |-----------|-------|
-| Humedad real < 50 % | 💧 Toca regar |
-| Progreso ≥ 95 % | 🌾 Listo para cosechar |
-| Edad ≥ 35 días y sin trasplantar | 🪴 Trasplante recomendado |
-| Edad ≤ 2 días | 🌱 Kit recién añadido |
+| Humedad real < 50 % | Riego pendiente |
+| Progreso ≥ 95 % | Listo para cosechar |
+| Edad ≥ 35 días y sin trasplantar | Trasplante recomendado |
+| Edad ≤ 2 días | Kit recién añadido |
 
-El número total se muestra como **badge** sobre el icono de campana del toolbar (se oculta si es 0, muestra "9+" si pasa de 9). Al pulsar un aviso, navega al destino según su tipo (lista de kits, detalle o herramienta de trasplante).
+El total se muestra como **badge** sobre el icono de campana del toolbar (oculto si es 0, "9+" por encima de 9). Al pulsar un aviso, la navegación se resuelve según su tipo (listado de kits, detalle o herramienta de trasplante).
 
 ### Perfil — `PerfilFragment`
-Muestra los datos del usuario (nombre y email de Firebase) y las opciones de cuenta, incluido **cerrar sesión**.
+Muestra los datos del usuario (nombre y email de Firebase) y las opciones de cuenta, incluido el cierre de sesión.
 
 ---
 
-## 🏗️ Arquitectura
+## Arquitectura
 
-Arquitectura por capas, con la UI desacoplada de los datos mediante **observación reactiva** (`LiveData`):
+Arquitectura por capas con la UI desacoplada de la capa de datos mediante observación reactiva (`LiveData`):
 
 ```
         ┌─────────────────────────────────────────────┐
@@ -126,7 +127,7 @@ Arquitectura por capas, con la UI desacoplada de los datos mediante **observaci�
         │  KitRepository (singleton, Firestore)        │
         │  SesionManager (Firebase Auth)               │
         │  TiempoService (REST Open-Meteo, hilos)      │
-        │  GeneradorNotificaciones (lógica en vivo)    │
+        │  GeneradorNotificaciones (estado derivado)   │
         └───────────────┬─────────────────────────────┘
                         │
         ┌───────────────▼─────────────────────────────┐
@@ -136,34 +137,34 @@ Arquitectura por capas, con la UI desacoplada de los datos mediante **observaci�
         └─────────────────────────────────────────────┘
 ```
 
-**Decisiones de diseño destacadas:**
-- **`KitRepository` es un singleton** con un *snapshot listener* de Firestore que publica un `LiveData<List<Kit>>`. Toda la UI observa esa misma fuente, así un cambio se propaga a todas las pantallas a la vez.
-- Entre pantallas **solo se pasa el ID del kit**, nunca el objeto: cada pantalla relee el kit del repositorio y siempre tiene la versión actualizada.
-- **Navegación:** un único grafo (`mobile_navigation.xml`) con `BottomNavigationView`. Tocar una pestaña siempre vuelve a la raíz de su sección (comportamiento centralizado en `MainActivity`).
-- Los getters calculados de `Kit` van anotados con `@Exclude` para que Firestore **no** los serialice como campos.
+**Decisiones de diseño relevantes:**
+- `KitRepository` es un **singleton** con un *snapshot listener* de Firestore que publica un `LiveData<List<Kit>>`. Toda la UI consume esa misma fuente, de modo que cada cambio se propaga a las pantallas activas de forma simultánea.
+- Entre pantallas **se transfiere únicamente el ID del kit**, no el objeto: cada pantalla resuelve el kit contra el repositorio y opera siempre sobre la versión vigente.
+- **Navegación:** grafo único (`mobile_navigation.xml`) con `BottomNavigationView`. La selección de pestaña reposiciona en la raíz de la sección (comportamiento centralizado en `MainActivity`).
+- Los getters calculados de `Kit` se anotan con `@Exclude` para excluirlos de la serialización de Firestore.
 
 ---
 
-## 🛠️ Tecnologías
+## Tecnologías
 
 - **Lenguaje:** Java 11
 - **Plataforma:** Android — `minSdk 24` · `targetSdk 36` · `compileSdk 36`
 - **UI:** Material 3, **ViewBinding**, **Navigation Component** + `BottomNavigationView`, `RecyclerView`
 - **Backend:** **Firebase** (BoM 33.7.0)
-  - **Cloud Firestore** — persistencia de kits y catálogo, en tiempo real.
+  - **Cloud Firestore** — persistencia de kits y catálogo, con sincronización en tiempo real.
   - **Firebase Authentication** — cuentas con email/contraseña.
-- **API REST:** [Open-Meteo](https://open-meteo.com/) (gratuita, sin clave) vía `HttpURLConnection` + parseo JSON manual.
+- **API REST:** [Open-Meteo](https://open-meteo.com/) (sin clave) mediante `HttpURLConnection` y parseo manual de JSON.
 - **Sensores:** sensor de luz (`Sensor.TYPE_LIGHT`).
 - **QR:** [ZXing](https://github.com/journeyapps/zxing-android-embedded) `zxing-android-embedded:4.3.0`.
 - **Build:** Gradle (Kotlin DSL) con *version catalog* (`libs.versions.toml`).
 
 ---
 
-## 🚀 Puesta en marcha
+## Puesta en marcha
 
 ### Requisitos
 - Android Studio (versión reciente) con un emulador o dispositivo **API 24+**.
-- Un proyecto de **Firebase** propio (la app necesita Firestore y Authentication).
+- Un proyecto de **Firebase** propio (la app requiere Firestore y Authentication).
 
 ### Pasos
 
@@ -172,44 +173,44 @@ git clone https://github.com/jibarra2508c/UrbanGarden.git
 # Abrir la carpeta en Android Studio
 ```
 
-1. Crea un proyecto en la [consola de Firebase](https://console.firebase.google.com/).
-2. Añade una app Android con el *package* `com.app.urbangarden`.
-3. Activa **Authentication → Email/Password** y crea una base de datos **Cloud Firestore**.
-4. Descarga tu `google-services.json` y colócalo en `app/`. *(El repo incluye uno de ejemplo; la API key que contiene no es secreta, viaja dentro del APK.)*
-5. (Opcional pero recomendado) Crea la colección `catalogo` con algunos kits de prueba para poder vincularlos por QR/ID — ver [modelo de datos](#-modelo-de-datos-en-firestore).
-6. Ejecuta en el emulador o dispositivo.
+1. Crear un proyecto en la [consola de Firebase](https://console.firebase.google.com/).
+2. Registrar una app Android con el *package* `com.app.urbangarden`.
+3. Habilitar **Authentication → Email/Password** y aprovisionar una base de datos **Cloud Firestore**.
+4. Descargar el `google-services.json` propio y ubicarlo en `app/`. *(El repositorio incluye uno de ejemplo; la API key que contiene no es un secreto, se distribuye dentro del APK.)*
+5. (Recomendado) Poblar la colección `catalogo` con kits de prueba para habilitar la vinculación por QR/ID — ver [modelo de datos](#modelo-de-datos-en-firestore).
+6. Compilar y ejecutar en el emulador o dispositivo.
 
-> **Permisos:** la app solo declara `INTERNET` (para el tiempo y Firebase) y usa la cámara a través del flujo de ZXing.
+> **Permisos:** la app declara únicamente `INTERNET` (tiempo y Firebase) y accede a la cámara a través del flujo de ZXing.
 
 ---
 
-## 🗄️ Modelo de datos en Firestore
+## Modelo de datos en Firestore
 
 ```
-usuarios/{uid}/kits/{idKit}        ← los kits de cada usuario (privados por uid)
-catalogo/{idKit}                   ← kits "de fábrica" que se vinculan al escanear
+usuarios/{uid}/kits/{idKit}        ← kits de cada usuario (aislados por uid)
+catalogo/{idKit}                   ← kits de catálogo que se vinculan al escanear
 ```
 
-Cada documento de kit mapea automáticamente a la clase `Kit`. Campos persistidos (los calculados se excluyen):
+Cada documento de kit se mapea automáticamente a la clase `Kit`. Campos persistidos (los calculados quedan excluidos):
 
 | Campo | Tipo | Descripción |
 |-------|------|-------------|
-| `nombre` | String | Nombre que el usuario da a la planta |
+| `nombre` | String | Nombre asignado por el usuario |
 | `especie` | String | Especie (p. ej. *Albahaca*) |
 | `tipo` | String | Categoría: aromática / hortaliza / verdura… |
-| `emoji` | String | Emoji para el mini-esquema del huerto |
-| `fechaActivacion` | Date | Momento en que se vinculó el kit |
+| `emoji` | String | Emoji para el esquema del huerto |
+| `fechaActivacion` | Date | Instante de vinculación del kit |
 | `fechaUltimoRiego` | Date | Referencia para el decaimiento de humedad |
 | `humedad` | int | Humedad base (0–100) del último riego |
 | `horasLuz`, `temperatura`, `diasEdad` | num | Parámetros base de la planta |
-| `trasplantado` | boolean | Si el usuario ya lo marcó como trasplantado |
+| `trasplantado` | boolean | Marca de trasplante realizada por el usuario |
 | `mlAlDia` | int | Agua diaria calculada (0 = sin calcular) |
 
-Para que la vinculación funcione, basta con que `catalogo` tenga documentos cuyo **ID** sea el del kit (formato `KIT-AAAA-NNNN`).
+Para habilitar la vinculación, `catalogo` debe contener documentos cuyo **ID** coincida con el del kit (formato `KIT-AAAA-NNNN`).
 
 ---
 
-## 📂 Estructura del proyecto
+## Estructura del proyecto
 
 ```
 app/src/main/java/com/app/urbangarden/
@@ -223,7 +224,7 @@ app/src/main/java/com/app/urbangarden/
 │   └── GeneradorNotificaciones.java# Avisos derivados del estado de los kits
 │
 ├── model/                      # Modelo de dominio
-│   ├── Kit.java                    # Entidad + cálculos en vivo (progreso/humedad)
+│   ├── Kit.java                    # Entidad + estado calculado (progreso/humedad)
 │   ├── Notificacion.java           # Aviso in-app (con su tipo)
 │   ├── ParametrosRiego.java        # Cálculo de agua/día
 │   └── ParametrosLuz.java          # Rango óptimo de luz y veredicto
@@ -236,20 +237,8 @@ app/src/main/java/com/app/urbangarden/
 
 ---
 
-## 🎓 Relación con las unidades del ciclo (DAM)
-
-El proyecto está pensado para tocar varias unidades del módulo de Programación Multimedia / Desarrollo de Interfaces:
-
-- **Persistencia y autenticación:** Cloud Firestore + Firebase Auth (`KitRepository`, `SesionManager`).
-- **APIs REST:** consumo de Open-Meteo y parseo de JSON (`TiempoService`).
-- **Concurrencia / hilos:** descarga de red en hilo de fondo y entrega reactiva con `LiveData` (`TiempoService`).
-- **UI avanzada:** Material 3, Navigation Component, `RecyclerView`, ViewBinding, diálogos, animaciones.
-- **Hardware del dispositivo:** sensor de luz y cámara (QR).
-
----
-
-## ✍️ Autoría
+## Autoría
 
 **Javier Ibarra** — Proyecto del ciclo **DAM**.
 
-> Versión de demostración: el asesor premium y la galería del lector QR son ganchos de producto sin implementación de pago/selección real.
+> Versión de demostración: el asesor premium y la galería del lector QR son puntos de entrada de producto sin implementación de pago/selección real.
