@@ -2,7 +2,7 @@
 
 Aplicación **Android nativa (Java)** para la gestión de **kits de huerto urbano**: cada usuario vincula sus kits físicos (por QR o ID), realiza el seguimiento del crecimiento de sus plantas en tiempo real y dispone de un conjunto de herramientas de cuidado (riego, luz, poda, trasplante) y avisos generados automáticamente.
 
-Proyecto desarrollado como trabajo de fin del ciclo **DAM** (Desarrollo de Aplicaciones Multiplataforma). El código está documentado en español y estructurado por capas (UI / modelo / datos) para facilitar su lectura y evaluación.
+Proyecto desarrollado como trabajo de fin del ciclo **DAM** (Desarrollo de Aplicaciones Multiplataforma). El código está documentado en español y estructurado por capas (UI / modelo / datos) para facilitar su lectura.
 
 > **Idea principal del producto:** UrbanGarden comercializa kits de cultivo (maceta + sustrato + semillas) identificados por un código único. El cliente lo escanea con la app, que registra la activación del kit y le da soporte durante el ciclo de cultivo hasta la cosecha.
 
