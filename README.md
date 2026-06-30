@@ -39,15 +39,13 @@ Proyecto desarrollado como trabajo de fin del ciclo **DAM** (Desarrollo de Aplic
 
 ## 🌿 Cómo crece el huerto: lógica de dominio
 
-El corazón de la app es la clase [`Kit`](app/src/main/java/com/app/urbangarden/model/Kit.java), que **no guarda valores "congelados"** sino que los calcula al vuelo a partir de las fechas:
+El corazón de la app es la clase [`Kit`](app/src/main/java/com/app/urbangarden/model/Kit.java), que **no guarda solo valores** sino que los calcula al a partir de las fechas:
 
 - **Edad real** (`getDiasReales`): días desde la activación + edad base de siembra. Crece sola cada día.
 - **Progreso del ciclo** (`getProgresoReal`): de 0 a 100 % a lo largo de **110 días** (`DIAS_CICLO_COMPLETO`). Es lo que pinta la barra de progreso del detalle.
 - **Humedad real** (`getHumedadReal`): parte del 100 % tras un riego y **decae linealmente hasta 0 % en 24 h** (`ParametrosRiego.INTERVALO_RIEGO_BASE_HORAS`).
 - **¿Necesita riego?** (`necesitaRiego`): cierto cuando la humedad real baja del **50 %**.
 - **Regar** (`regar`): pone la humedad al 100 % y reinicia el reloj del decaimiento.
-
-Esto hace que el huerto se sienta "vivo": si dejas la app unos días y vuelves, las plantas habrán crecido y algunas pedirán agua, sin que nada las haya actualizado manualmente.
 
 ---
 
