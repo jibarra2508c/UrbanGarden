@@ -239,6 +239,4 @@ app/src/main/java/com/app/urbangarden/
 
 ## Autoría
 
-**Javier Ibarra** — Proyecto del ciclo **DAM**.
-
-> Versión de demostración: el asesor premium y la galería del lector QR son puntos de entrada de producto sin implementación de pago/selección real.
+**Javier Ibarra**
