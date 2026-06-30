@@ -10,6 +10,7 @@ Proyecto desarrollado como trabajo de fin del ciclo **DAM** (Desarrollo de Aplic
 
 ## Índice
 
+- [Capturas](#capturas)
 - [Funcionalidades](#funcionalidades)
 - [Lógica de dominio](#lógica-de-dominio)
 - [Pantallas en detalle](#pantallas-en-detalle)
@@ -19,6 +20,32 @@ Proyecto desarrollado como trabajo de fin del ciclo **DAM** (Desarrollo de Aplic
 - [Modelo de datos en Firestore](#modelo-de-datos-en-firestore)
 - [Estructura del proyecto](#estructura-del-proyecto)
 - [Autoría](#autoría)
+
+---
+
+## Capturas
+
+<table>
+  <tr>
+    <td align="center"><img src="docs/screenshots/home.png" width="220" alt="Inicio"/><br/><sub><b>Inicio</b> · tiempo y mis kits</sub></td>
+    <td align="center"><img src="docs/screenshots/detalle_kit.png" width="220" alt="Detalle del kit"/><br/><sub><b>Detalle del kit</b> · progreso del ciclo</sub></td>
+    <td align="center"><img src="docs/screenshots/calculadora_riego.png" width="220" alt="Calculadora de riego"/><br/><sub><b>Calculadora de riego</b></sub></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="docs/screenshots/medidor_luz.png" width="220" alt="Medidor de luz"/><br/><sub><b>Medidor de luz</b> · sensor del dispositivo</sub></td>
+    <td align="center"><img src="docs/screenshots/vincular_qr.png" width="220" alt="Vincular kit por QR"/><br/><sub><b>Vincular kit</b> · QR / ID</sub></td>
+    <td align="center"><img src="docs/screenshots/notificaciones.png" width="220" alt="Notificaciones"/><br/><sub><b>Notificaciones</b> · avisos in-app</sub></td>
+  </tr>
+</table>
+
+<!--
+  Demo en vídeo (opcional): sube el MP4 a YouTube (oculto/no listado) y enlázalo,
+  o arrastra el archivo a un comentario de issue/PR en GitHub para alojarlo y pega
+  aquí la URL resultante. Para un GIF corto, descomenta la línea siguiente:
+-->
+<!-- <p align="center"><img src="docs/screenshots/demo.gif" width="260" alt="Demo"/></p> -->
+
+> Las imágenes aún no están añadidas. Coloca los PNG en `docs/screenshots/` con los nombres indicados y aparecerán automáticamente.
 
 ---
 
