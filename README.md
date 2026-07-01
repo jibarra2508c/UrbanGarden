@@ -36,6 +36,11 @@ Proyecto desarrollado como trabajo de fin del ciclo **DAM** (Desarrollo de Aplic
     <td align="center"><img src="docs/screenshots/vincular_qr.png" width="220" alt="Vincular kit por QR"/><br/><sub><b>Vincular kit</b> · QR / ID</sub></td>
     <td align="center"><img src="docs/screenshots/notificaciones.png" width="220" alt="Notificaciones"/><br/><sub><b>Notificaciones</b> · avisos in-app</sub></td>
   </tr>
+  <tr>
+    <td align="center"><img src="docs/screenshots/kits.png" width="220" alt="Mis kits"/><br/><sub><b>Mis kits</b> · listado de kits</sub></td>
+    <td align="center"><img src="docs/screenshots/perfil.png" width="220" alt="Perfil"/><br/><sub><b>Perfil</b> · cuenta y sesión</sub></td>
+    <td></td>
+  </tr>
 </table>
 
 <!--
@@ -44,8 +49,6 @@ Proyecto desarrollado como trabajo de fin del ciclo **DAM** (Desarrollo de Aplic
   aquí la URL resultante. Para un GIF corto, descomenta la línea siguiente:
 -->
 <!-- <p align="center"><img src="docs/screenshots/demo.gif" width="260" alt="Demo"/></p> -->
-
-> Las imágenes aún no están añadidas. Coloca los PNG en `docs/screenshots/` con los nombres indicados y aparecerán automáticamente.
 
 ---
 
