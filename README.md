@@ -25,7 +25,7 @@ Proyecto desarrollado como trabajo de fin del ciclo **DAM** (Desarrollo de Aplic
 
 ## Capturas
 
-<table>
+<table align="center">
   <tr>
     <td align="center"><img src="docs/screenshots/home.png" width="220" alt="Inicio"/><br/><sub><b>Inicio</b> · tiempo y mis kits</sub></td>
     <td align="center"><img src="docs/screenshots/kits.png" width="220" alt="Mis kits"/><br/><sub><b>Mis kits</b> · listado de kits</sub></td>
