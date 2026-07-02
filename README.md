@@ -29,8 +29,8 @@ Proyecto desarrollado como trabajo de fin del ciclo **DAM** (Desarrollo de Aplic
   <tr align="center">
     <td align="center"><img src="docs/screenshots/home.png" width="220" alt="Inicio"/><br/><sub><b>Inicio</b> · tiempo y mis kits</sub></td>
     <td align="center"><img src="docs/screenshots/kits.png" width="220" alt="Mis kits"/><br/><sub><b>Mis kits</b> · listado de kits</sub></td>
-    <td align="center"><img src="docs/screenshots/perfil.png" width="220" alt="Perfil"/><br/><sub><b>Perfil</b> · cuenta y sesión</sub></td>
     <td align="center"><img src="docs/screenshots/vincular_qr.png" width="220" alt="Vincular kit por QR"/><br/><sub><b>Vincular kit</b> · QR / ID</sub></td>
+    <td align="center"><img src="docs/screenshots/perfil.png" width="220" alt="Perfil"/><br/><sub><b>Perfil</b> · cuenta y sesión</sub></td>
   </tr>
   <tr>
     <td align="center"><img src="docs/screenshots/detalle_kit.png" width="220" alt="Detalle del kit"/><br/><sub><b>Detalle del kit</b> · progreso del ciclo</sub></td>
@@ -40,8 +40,8 @@ Proyecto desarrollado como trabajo de fin del ciclo **DAM** (Desarrollo de Aplic
   </tr>
 </table>
 
-<p align="center"><img src="docs/screenshots/demo.gif" width="260" alt="Demo en vídeo de la app"/></p>
 <p align="center"><sub>Recorrido por la app: inicio, kits, calculadora de riego, medidor de luz, notificaciones y perfil.</sub></p>
+<p align="center"><img src="docs/screenshots/demo.gif" width="260" alt="Demo en vídeo de la app"/></p>
 
 ---
 
