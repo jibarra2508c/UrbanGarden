@@ -40,7 +40,7 @@ Proyecto desarrollado como trabajo de fin del ciclo **DAM** (Desarrollo de Aplic
   </tr>
 </table>
 
-<p align="center"><sub>Recorrido por la app: inicio, kits, calculadora de riego, medidor de luz, notificaciones y perfil.</sub></p>
+<p align="center"><sub>Recorrido por la app: inicio, kits, Qr, perfil, calculadora de riego, medidor de luz, notificaciones y transplante.</sub></p>
 <p align="center"><img src="docs/screenshots/demo.gif" width="260" alt="Demo en vídeo de la app"/></p>
 
 ---
