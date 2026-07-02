@@ -43,12 +43,8 @@ Proyecto desarrollado como trabajo de fin del ciclo **DAM** (Desarrollo de Aplic
   </tr>
 </table>
 
-<!--
-  Demo en vídeo (opcional): sube el MP4 a YouTube (oculto/no listado) y enlázalo,
-  o arrastra el archivo a un comentario de issue/PR en GitHub para alojarlo y pega
-  aquí la URL resultante. Para un GIF corto, descomenta la línea siguiente:
--->
-<!-- <p align="center"><img src="docs/screenshots/demo.gif" width="260" alt="Demo"/></p> -->
+<p align="center"><img src="docs/screenshots/demo.gif" width="260" alt="Demo en vídeo de la app"/></p>
+<p align="center"><sub>Recorrido por la app: inicio, kits, calculadora de riego, medidor de luz, notificaciones y perfil.</sub></p>
 
 ---
 
