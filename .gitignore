@@ -13,5 +13,8 @@ build/
 .idea/
 .claude/
 
+# Firebase — cada dev usa su propio google-services.json (no se versiona)
+app/google-services.json
+
 # OS
 .DS_Store

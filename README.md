@@ -199,7 +199,7 @@ git clone https://github.com/jibarra2508c/UrbanGarden.git
 1. Crear un proyecto en la [consola de Firebase](https://console.firebase.google.com/).
 2. Registrar una app Android con el *package* `com.app.urbangarden`.
 3. Habilitar **Authentication → Email/Password** y aprovisionar una base de datos **Cloud Firestore**.
-4. Descargar el `google-services.json` propio y ubicarlo en `app/`. *(El repositorio incluye uno de ejemplo; la API key que contiene no es un secreto, se distribuye dentro del APK.)*
+4. Descargar el `google-services.json` propio desde la consola y ubicarlo en `app/`. *(El repositorio **no** incluye un `google-services.json` real; se aporta una plantilla `app/google-services.json.example` que puedes copiar a `app/google-services.json` y rellenar con los datos de tu proyecto.)*
 5. (Recomendado) Poblar la colección `catalogo` con kits de prueba para habilitar la vinculación por QR/ID — ver [modelo de datos](#modelo-de-datos-en-firestore).
 6. Compilar y ejecutar en el emulador o dispositivo.
 
