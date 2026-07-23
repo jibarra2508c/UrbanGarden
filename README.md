@@ -257,9 +257,3 @@ app/src/main/java/com/app/urbangarden/
     ├── calculadoraRiego/ · medidorLuz/ · asesor/ · poda/ · trasplante/
     ├── qr/ · notifications/ · perfil/
 ```
-
----
-
-## Autoría
-
-**Javier Ibarra**
